@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neusoft.busmis.security.dao.IUserdao">
+
+ <!-- 没有关联属性的结果映射 -->
+  <resultMap id="UserResultMap" type="User" >
+  	<id property="id" column="USERID" />
+  	<result property="name" column="USERNAME" />
+   <result property="password" column="UserPassword" />
+  	<result property="role" column="UserROLE" />
+  <result property="birth" column="BirthDay" />
+  </resultMap>
+ <insert id="create">
+   insert into UserInfo values (#{id},#{password},#{name},#{role},#{birth})
+ </insert>
+ 
+  <update id="update">
+   update UserInfo set UserPassword=#{password},UserName=#{name},UserRole=#{role},BirthDay=#{birth}    where USERID=#{id}
+  </update>
+  
+  <delete id="delete">
+   delete from UserInfo where USERID=#{id}
+  </delete>
+   
+ <select id="selectListWithPage">
+  select * from 
+ </select>
+ 
+ 	<!-- 取得指定用户的模块列表 -->
+	<select id="selectModuleListByUser" resultMap="com.neusoft.busmis.security.dao.IModuleDao.ModuleResultMapWithFunctionsByNestedResultMap" >
+	 select a.*,b.* from systemmodule a inner join SYSTEMFUNCTION b on a.MNO=b.MNO
+	 where a.MNO in (select MNO from RoleModule where RNO in (select RNO from UserRole where USERID=#{userid}))
+	</select>
+ <select id="selectListByAll" resultMap="UserResultMap">
+ select * from userinfo
+ </select>
+<insert id="addRole"  >
+   insert into USERROLE values (#{id},#{roleNo})  
+  </insert>
+</mapper>
+

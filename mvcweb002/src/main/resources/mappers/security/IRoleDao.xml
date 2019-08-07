@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 角色DAO接口Mapping映射 -->   
+<mapper namespace="com.neusoft.busmis.security.dao.IRoleDao">
+  <!-- 启用此映射的全局缓存 -->
+  <cache/>
+  <resultMap type="Role"  id="RoleResultMap">
+     <id property="no" column="RNO" />
+  	 <result property="name" column="RNAME" />
+  </resultMap>
+  <resultMap type="Role" id="RoleResultMapWithModule" extends="RoleResultMap">
+     <collection property="modules" resultMap="com.neusoft.busmis.security.dao.IModuleDao.ModuleResultMap"></collection>
+  </resultMap>
+   <!-- 使用内嵌式ResultMap实现方式的关联属性的结果映射 -->
+   <resultMap id="RoleResultMapWithUserByNestedResultMap" type="Role" extends="RoleResultMap" >
+  	<collection property="users" resultMap="com.neusoft.busmis.security.dao.IUserdao.UserResultMap" ></collection>
+  </resultMap>
+  <insert id="create" flushCache="true" >
+   insert into Roles values (#{no},#{name})
+  
+  </insert>
+  
+  <update id="update" flushCache="true">
+   update roles set RNAME=#{name} where RNO=#{no}
+  </update>
+  
+  <delete id="delete" flushCache="true">
+   delete from Roles where RNO=#{no}
+  </delete>
+  
+  <select id="selectListByAll" resultMap="RoleResultMap">
+   select * from roles
+  
+  </select>
+  
+  <select id="selectById"  resultType="User">
+  select UserID id,UserPassword password, UserName name, UserRole role, age, joindate from userinfo
+  where USERID=#{id}
+  
+  </select>
+   
+  <select id="selectListByAllWithUserByNestedResultMap" resultMap="RoleResultMapWithUserByNestedResultMap">
+        select a.*, c.* from roles a  left outer join userRole b on a.RNO=b.RNO
+   left outer join userInfo c on b.userid=c.userid
+  </select>
+  <insert id="RoleAddModule">
+   insert into rolemodule values(#{rno}, #{mno})
+  </insert>
+  
+  <select id="selectListWithModule" resultMap="RoleResultMapWithModule">
+   select a.*,c.Mname from roles a left outer join rolemodule b on a.RNO=b.RNO left outer join 
+       systemmodule c on b.MNO=c.MNO
+  </select>
+</mapper>
