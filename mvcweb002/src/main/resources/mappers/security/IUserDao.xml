@@ -34,7 +34,7 @@
 	 where a.MNO in (select MNO from RoleModule where RNO in (select RNO from UserRole where USERID=#{userid}))
 	</select>
  <select id="selectListByAll" resultMap="UserResultMap">
- select * from userinfo
+  select * from userinfo
  </select>
 <insert id="addRole"  >
    insert into USERROLE values (#{id},#{roleNo})  

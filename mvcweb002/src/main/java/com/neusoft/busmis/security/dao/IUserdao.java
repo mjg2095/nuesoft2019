@@ -2,10 +2,12 @@ package com.neusoft.busmis.security.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.neusoft.busmis.security.model.ModuleModel;
 import com.neusoft.busmis.security.model.RoleModel;
 import com.neusoft.busmis.security.model.UserModel;
-
+@Mapper
 public interface IUserdao {
 	public void create(UserModel userModel ) throws Exception;
 	public void delete(UserModel userModel) throws Exception ;
